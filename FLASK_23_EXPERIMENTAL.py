@@ -1,0 +1,51 @@
+import os
+from flask import Flask, render_template, request, send_file, redirect
+
+app = Flask(__name__)
+
+# Define the directory for storing uploaded files
+UPLOAD_DIRECTORY = os.path.join(os.getcwd(), "uploads")
+
+# Set the maximum content length allowed for file uploads (e.g., 1 GB)
+app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024 * 1024
+
+@app.route("/")
+def index():
+    # Get a list of all files in the upload directory
+    files = os.listdir(UPLOAD_DIRECTORY)
+    # Render the HTML template with the list of files
+    return render_template("index.html", files=files)
+
+@app.route("/upload", methods=["POST"])
+def upload():
+    # Get the uploaded file from the request
+    uploaded_file = request.files["file"]
+
+    # Check the mimetype of the uploaded file
+    if uploaded_file.mimetype == 'text/plain':
+        # Save the file to the upload directory using a streaming approach
+        filename = uploaded_file.filename
+        file_path = os.path.join(UPLOAD_DIRECTORY, filename)
+        with open(file_path, "wb") as f:
+            chunk_size = 4096  # Read and write 4KB at a time
+            while (chunk := uploaded_file.stream.read(chunk_size)) :
+                f.write(chunk)
+
+        # Return a success message
+        return "File uploaded successfully"
+    else:
+        # Return an error message if the file type is not allowed
+        return "Invalid file type. Only 'text/plain' files are allowed.", 400
+
+@app.route("/download/<filename>")
+def download(filename):
+    # Construct the path to the file
+    path = os.path.join(UPLOAD_DIRECTORY, filename)
+    # Send the file to the client for download
+    return send_file(path, as_attachment=True)
+
+if __name__ == "__main__":
+    # Create the upload directory if it does not exist
+    if not os.path.exists(UPLOAD_DIRECTORY):
+        os.makedirs(UPLOAD_DIRECTORY)
+    app.run(host="0.0.0.0", port="8000", debug=True)
