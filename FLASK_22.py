@@ -3,11 +3,10 @@ from flask import Flask, render_template, request, send_file, redirect
 
 app = Flask(__name__)
 
-# Define the directory for storing uploaded files
-UPLOAD_DIRECTORY = os.path.join(os.getcwd(), "uploads")
-
 @app.route("/")
 def index():
+    # Define the directory for storing uploaded files
+    UPLOAD_DIRECTORY ="/upload"
     # Get a list of all files in the upload directory
     files = os.listdir(UPLOAD_DIRECTORY)
     # Render the HTML template with the list of files
