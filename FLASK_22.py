@@ -2,6 +2,9 @@ import os
 from flask import Flask, render_template, request, send_file, redirect
 
 app = Flask(__name__)
+# Define the directory for storing uploaded files
+UPLOAD_DIRECTORY = os.path.join(os.getcwd(), "upload")
+
 
 @app.route("/")
 def index():
