@@ -1,0 +1,16 @@
+def remove_random_chars(input_path, output_path)
+    # Read the content of the input file
+    with open(input_path, 'r') as input_file
+        content = input_file.read()
+
+    # Remove every second character (assuming those are the random characters)
+    cleaned_content = content[2]
+
+    # Write the cleaned content to the output file
+    with open(output_path, 'w') as output_file
+        output_file.write(cleaned_content)
+
+# Example usage
+input_file_path = 'output.py'
+output_file_path = 'cleaned.py'
+remove_random_chars(input_file_path, output_file_path)

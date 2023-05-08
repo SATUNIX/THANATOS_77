@@ -1,0 +1,22 @@
+import random
+import string
+
+def insert_random_chars(file_path, output_path):
+    # Read the content of the input file
+    with open(file_path, 'r') as input_file:
+        content = input_file.read()
+
+    # Generate a modified version of the content with random characters inserted
+    modified_content = ''
+    for letter in content:
+        modified_content += letter
+        modified_content += random.choice(string.ascii_letters)
+
+    # Write the modified content to the output file
+    with open(output_path, 'w') as output_file:
+        output_file.write(modified_content)
+
+# Example usage:
+input_file_path = 'input.py'
+output_file_path = 'output.py'
+insert_random_chars(input_file_path, output_file_path)
