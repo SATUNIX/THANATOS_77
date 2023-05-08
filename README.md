@@ -29,7 +29,9 @@ You can figure it out, python is easy.
 ## kys
 
 ## Im getting bored of this. 
-### Whos handling the phising 
+### Whos handling the phising??
+#### Me again? okay... 
+
 ## No warranty: 
 Specific networked infrastructure for automating an attack. 
     Copyright (C) <2023>  <Anthony Grace and his team from Tafe>
