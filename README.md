@@ -25,12 +25,7 @@ All steps are sub 15 minutes total.
 ## Clone the repo, allow config yada yada 
 
 # CONFIG 
-You can figure it out, python is easy. 
-## kys
-
-## Im getting bored of this. 
-### Whos handling the phising??
-#### Me again? okay... 
+config here: should be handled by scripts 
 
 ## No warranty: 
 Specific networked infrastructure for automating an attack. 
