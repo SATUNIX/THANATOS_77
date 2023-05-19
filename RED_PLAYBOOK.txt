@@ -1,0 +1,97 @@
+RED TEAM:
+Objective: To probe and identify vulnerabilities in the system and aid in enhancing the robustness of the defense mechanisms.
+
+Red Team Cybersecurity Playbook
+Table of Contents
+
+    Introduction
+    Objective
+    Scope
+    Methodology
+    Tools
+    Kill Chain Steps
+    Basic Recommendations to Improve Security
+    Conclusion
+
+Introduction
+
+This playbook presents a comprehensive outline of strategies, tactics, and methodologies utilized during Red Team operations. The primary purpose is to conduct exhaustive cybersecurity assessments to bolster the organization's defense mechanisms by unearthing system vulnerabilities.
+Objective
+
+The core objective of the Red Team operation is to discover and identify potential vulnerabilities within the organization's systems and network. We aim to gain insights and derive invaluable lessons, which will be paramount in enhancing the overall resilience and robustness of our defense mechanisms.
+Scope
+
+The scope of our Red Team operations encompasses all network systems, splunk servers, forwarders, and applications in use within the organization. It includes both on-premise and C2 (Command and control) resources.
+However, specific targets and boundaries will be agreed upon with the organization's management before the start of any operation. This is currently a single windows 10 machine acting as a splunk collector behind a PFsense router.
+Methodology
+
+Our methodology follows an adapted version of the 8 phase kill chain process. This provides a structured approach to our operations, ensuring that all potential vulnerabilities are systematically identified and exploited for testing purposes.
+Tools
+
+The following tools form the bedrock of our Red Team operations:
+
+    Wireshark
+    Nmap
+    Netcat
+    Python Flask
+    Metasploit Framework
+    msfstarter.py
+    FLASK_25.py
+
+Kill Chain Steps
+
+    Planning and Reconnaissance
+    Scanning and Enumeration
+    Exploitation
+    Post-Exploitation and Lateral Movement
+    Obfuscation and Evasion
+    Data Exfiltration
+    Reporting
+
+1. Planning and Reconnaissance
+We initiate the operation by defining the primary objectives and outlining the scope. This stage involves meticulous information gathering about the target system - including but not limited to IP addresses, domain names, and other publicly accessible information. We aim to map the network topology, identify potential attack vectors, and conduct thorough Open Source Intelligence (OSINT) gathering.
+2. Scanning and Enumeration
+
+Using tools like Nmap and Wireshark, we scan the target system to identify open ports, active IP addresses, and running services. This stage also involves enumeration of network resources, identification of system configurations, network shares, and user accounts - providing us with a comprehensive understanding of the target landscape.
+
+3. Exploitation
+
+The exploitation phase begins with the execution of msfstarter.py. Once the target downloads a document from our phishing generator, we proceed to exploit identified vulnerabilities. We strive to gain and maintain access to the system using techniques like backdoor creation or keylogger installation, thereby enabling us to delve deeper into the system.
+
+We also use the home built Flask program (FLASK_25.py) to set up a server for managing exfiltrated data and storaing additional powershell scripts, should they be required.
+This requires meticulous testing and configuration to verify the Flask structure for GET requests, among other things.
+
+During this phase, we employ PowerShell to download and run scripts from our server, ensuring persistence and opening a reverse shell. This requires netcat ports and powershell to be enabled and turned on.
+
+4. Post-Exploitation and Lateral Movement
+
+After securing initial access, our focus shifts to moving laterally within the network, escalating privileges when necessary. The goal is to gain access to more systems, search for sensitive data, and establish persistence.
+We will employ the usage of John the ripper and hashcat to attempt to crack various hashdumps against a pre-prepared wordlist. If the administrative password cannot be gathered we will rely on social engineering tactics.
+
+This stage also requires starting a Netcat listener on the Kali system and using Netcat on the target system to open a reverse shell. If the automated privilege escalation fails, we perform manual tasks using Metasploit to escalate privileges. These manual tasks have been detailed further in the resource:
+https://github.com/SATUNIX/THANATOS_77
+
+5. Obfuscation and Evasion
+
+To maintain the operation's stealth, we may employ evasion techniques to bypass detection mechanisms like IDS/IPS and antimalware solutions, this includes changing netcat ports and addresses, utilising Nmap IDS evasion, and disengaging the C2 server when not in use. Additionally, we utilize obfuscation techniques to camouflage aformentioned activities, thereby maintaining persistence within the system. - Nmap IDS evasion, etc
+
+6. Data Exfiltration
+
+A crucial part of the operation involves identifying valuable data and extracting it from the target system. We employ secure and covert channels to exfiltrate data, ensuring our activities remain undetected. flask c2 control - home made
+7. Reporting
+
+Upon the operation's conclusion, we document all activities - including identified vulnerabilities, exploited systems, and accessed data. A detailed report is provided to the organization's security team or management, highlighting areas that require improvement and offering recommendations to enhance security. - double check
+Basic Recommendations to Improve Security
+
+Based on our Red Team operations, we recommend the following measures to enhance your organization's security posture:
+
+    Regular Patch Management: Regularly update all systems, applications, and firmware to patch known vulnerabilities.
+    Employee Training: Conduct regular security awareness training to educate employees about potential threats and safe practices.
+    Multi-Factor Authentication: Implement MFA wherever possible to add an extra layer of security.
+    Regular Backups: Regularly back up critical data to mitigate the impact of data breaches or ransomware attacks.
+    Network Segmentation: Separate critical systems and data from the rest of the network to limit lateral movement in case of an intrusion.
+    Regular Penetration Testing: Regular pen-testing can help identify new vulnerabilities and test the effectiveness of current security measures.
+
+Conclusion
+
+This playbook offers a structured methodology for testing the organization's cybersecurity defenses. It is critical to remember that these activities are conducted with the explicit permission of the organization's management and are intended to improve security without causing unnecessary disruptions or inflicting damage.
